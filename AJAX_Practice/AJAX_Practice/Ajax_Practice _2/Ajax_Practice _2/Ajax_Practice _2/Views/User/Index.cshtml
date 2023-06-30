@@ -1,0 +1,335 @@
+﻿@model Ajax_Practice__2.Models.Models.UserModel
+@using Ajax_Practice__2.Helpers.GlobalEnum
+
+
+<style>
+    span{
+        color:blue;
+    }
+</style>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>UserModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(Model=>Model.UserId)     
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                <span class="Name_Loc"></span>
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                <span class="Address_Loc"></span>
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.RadioButtonFor(model => model.Gender, "Male")
+                <span>Male</span>
+                @Html.RadioButtonFor(model => model.Gender, "Female")
+                <span>Female</span>
+                @*@Html.EditorFor(model => model.Gender, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.Role, EnumHelper.GetSelectList(typeof(UserRoleType)), "--Select Role--", new { @class = "input-group-text form-control" })
+                <span class="Role_Loc"></span>
+                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", Type = "date" } })
+                <span class="DOB_Loc"></span>
+                @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                <span class="Phone_Loc"></span>
+                @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                <span class="Email_Loc"></span>
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", Type = "password" } })
+                <span class="Password_Loc"></span>
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Add  User" id="SubmitBtn" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<table class="table table-responsive" id="MainTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Gender</th>
+            <th>Role</th>
+            <th>DOB</th>
+            <th>Phone No</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="tablebody">
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        LoadUserData();
+
+        $("#SubmitBtn").click(function () {
+            let abc = validate()
+            if (abc) {
+
+                var UserModel = {
+                    UserId: $("#UserId").val(),
+                    Name: $("#Name").val(),
+                    Address: $("#Address").val(),
+                    Gender: $('input[name="Gender"]:checked').val(),
+                    Role: $("#Role").val(),
+                    DOB: $("#DOB").val(),
+                    PhoneNo: $("#PhoneNo").val(),
+                    Email: $("#Email").val(),
+                    Password: $("#Password").val(),
+                }
+                $.ajax({
+                    async: true,
+                    type: "Post",
+                    url: "/User/Create",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(UserModel),
+                    success: function (res) {
+                        console.log(data.UserId)
+                        if (res.Success) {
+                            if (data.UserId == 0) {
+                                alert("data added");
+                                $("#tablebody").empty();
+                                LoadUserData();
+                                $("form").trigger("reset");
+                            } else {
+                                alert("data updated");
+                            }
+
+                        }
+                        else {
+                            alert("error");
+                        }
+                    },
+                    error: function () {
+                        alert("there is some error");
+                    }
+                });
+            }
+        })
+    })
+    function LoadUserData() {
+        $.ajax({
+            type: "Get",
+            url: "/User/GetAllUser",
+            dataType: "JSON",
+            success: function (res) {
+                res.forEach(x => {
+                    //console.log(x.UserId);
+                    let row = `
+                        <tr>
+                            <td>${x.Name}</td>
+                            <td>${x.Address}</td>
+                            <td>${x.Gender}</td>
+                            <td>${x.Role}</td>
+                            <td>${x.DOBFormat}</td>
+                            <td>${x.PhoneNo}</td>
+                            <td>${x.Email}</td>
+                            <td>${x.Password}</td>
+                            <td><button class="btn btn-primary" onclick="EditUser(${x.UserId})">Edit</button>|
+                                <button class="btn btn-danger" onclick="DeleteUser(${x.UserId})"> Delete</button></td>
+                        </tr>
+
+
+                    `;
+
+                    $("#tablebody").append(row);
+                    //console.log(row);
+                });
+            },
+            error: function () {
+                alert("there is problem to load data");
+            }
+        })
+    }
+    function EditUser(UserId) {
+        var uid = { id: UserId };
+        
+        $.ajax({
+            async: true,
+            type: "Get",
+            url: "/User/Edit",
+            data: uid,
+            dataType: "json",
+            success: function (res) {
+                console.log($("#UserId").val(res.UserId));
+                $("#UserId").val(res.UserId);
+                $("#Name").val(res.Name);
+                $("#Address").val(res.Address);
+                $("input[type='radio']:checked").val(res.Gender);
+                $("#Date").val(res.Date);
+                $("#Role").val(res.Role),
+                $("#DOB").val(res.DOBFormat),
+                $("#PhoneNo").val(res.PhoneNo),
+                $("#Email").val(res.Email),
+                $("#Password").val(res.Password),
+                $("#SubmitBtn").val("update");
+            },
+            error: function (res) {
+                alert("error");
+            }
+        })
+    }
+    function DeleteUser(Id) {
+        var tid = { id: Id };
+        $.ajax({
+            async: true,
+            type: "Post",
+            url: "/User/Delete",
+            data: JSON.stringify(tid),
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                //debugger;
+                if (res.success) {
+                    $("#tablebody").empty();
+                    LoadUserData();
+                    //$("#UserId").remove();
+
+                } else {
+                    alert('Failed to delete the item.');
+                }
+            },
+            error: function () {
+                alert('Error occurred while deleting the item.');
+            }
+        });
+    }
+
+    function validate() {
+        let status = true;
+            let Name = $("#Name").val();
+            let Address = $("#Address").val();
+            let Gender= $('input[name="Gender"]:checked').val();
+            let Role= $('#gender option:selected').val();
+            let DOB= $("#DOB").val();
+            let PhoneNo= $("#PhoneNo").val();
+            let Email= $("#Email").val();
+            let Password = $("#Password").val();
+
+        let nameregex = /^[a-zA-Z\s]+$/;
+        if (Name == "") {
+            $('.Name_Loc').html("please enter your name...");
+            status = false;
+        }
+        else if (!nameregex.test(Name)) {
+            $('.Name_Loc').html("please enter text only...");          
+            status = false;
+        }
+        else {
+            $('.Name_Loc').html("");
+        }
+
+        if (Address == "") {
+            $('.Address_Loc').html("please enter your name...");
+            status = false;
+        }
+        else {
+            $('.Address_Loc').html("");
+        }
+        if (Role == "") {
+            $('.Role_loc').html(`pleale select your gender...`);
+            status = false;
+        }
+        else {
+            $('.Role_loc').html("");
+        }
+
+        if (DOB == "") {
+            $('.DOB_Loc').html(`pleale select your gender...`);
+            status = false;
+        }
+        else {
+            $('.DOB_Loc').html("");
+        }
+
+        if (PhoneNo == "") {
+            $('.Phone_Loc').html(`pleale select your gender...`);
+            status = false;
+        }
+        else {
+            $('.Phone_Loc').html("");
+        }
+
+        if (Email == "") {
+            $('.Email_Loc').html(`pleale select your gender...`);
+            status = false;
+        }
+        else {
+            $('.Email_Loc').html("");
+
+        }
+
+        if (Password == "") {
+            $('.Password_Loc').html(`pleale select your gender...`);
+            status = false;
+        }
+        else {
+            $('.Password_Loc').html("");
+
+        }
+        return status;
+    }
+
+</script>

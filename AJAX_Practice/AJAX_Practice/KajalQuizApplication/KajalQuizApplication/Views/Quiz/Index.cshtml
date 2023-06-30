@@ -1,0 +1,302 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3 style="color :palevioletred"><i> Welcome to Quiz Application : <span style="color:darkgreen">@Session["Email"]</span> </i></h3>
+
+<div class="container container-fluid">
+    <div class="Question">
+
+    </div>
+    <div class="Result">
+
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    let TotalMark = 0;
+    let Attempt = 0;
+    let Skip = 0;
+    let RightAnswer = 0;
+    let WrongAnswer = 0;
+    let data = [];
+    let success = [];
+    $(document).ready(function () {
+        //alert("Hello");
+        let AnswerArr = [];
+        let i = 1;
+        $.ajax({
+            method: "GET",
+            url: "/Quiz/GetQuestionList",
+            success: function (res) {
+                data = JSON.parse(res);
+                console.log(data);
+                for (var i = 1; i <= data.length; i++) {
+                    $(".Question").append(`<div class="${i}">
+                        <div>Q-${i}.${data[i - 1].Title}</div>
+                    </div>`);
+                    for (var j = 1; j <= data[i - 1].Answer.length; j++) {
+                        $(`.${i}`).append(`<div>
+                            <input type="radio" id="${data[i - 1].Answer[j - 1].AnswerId}" name="QO${i}" value="${data[i - 1].Answer[j - 1].Title}">
+                            <label for="QO${i}">${data[i - 1].Answer[j - 1].Title}</label>
+                        </div>`)
+                    }
+                    if (i == data.length) {
+                        $(`.${i}`).append(`<div>
+                        <div class="row">
+                        <div class="col-md-2"><button class="Next btn btn-primary" onclick="QuestionSubmit(${i})">Submit</button></div>
+                        </div>
+                        </div>`)
+                    }
+                    else {
+                        $(`.${i}`).append(`<div>
+                        <div class="row">
+                        <div class="col-md-2"><button class="Skip btn btn-primary" onclick="QuestionSkip(${i})">Skip</button></div>
+                        <div class="col-md-2"><button class="Next btn btn-primary" onclick="QuestionNext(${i})">Next</button></div>
+                        </div>
+                        </div>`)
+                    }
+                }
+                $(".1").show();
+                for (var i = 2; i <= data.length; i++) {
+                    $(`.${i}`).hide();
+                }
+            }
+        });
+    });
+    function QuestionNext(e) {
+        if ($(`input:radio[name='QO${e}']`).is(":checked")) {
+            let done = $(`input:radio[name="QO${e}"]:checked`).attr("AnswerId");
+            $.ajax({
+                method: "Get",
+                url: "/Quiz/GetAnswerList",
+                success: function (res) {
+                    var ansList = JSON.parse(res);
+                    //console.log(ansList);
+                    success = ansList.find(x => x.AnswerId == done && x.IsCorrect == true);
+                    if (success != undefined) {
+                        TotalMark = TotalMark + 10;
+                        Attempt = Attempt + 1;
+                        RightAnswer = RightAnswer + 1;
+                    }
+                    else {
+                        TotalMark = TotalMark - 5;
+                        Attempt = Attempt + 1;
+                        WrongAnswer = WrongAnswer + 1;
+                    }
+                }
+
+            });
+            $(`.${e}`).hide();
+            $(`.${e + 1}`).show();
+        }
+        else {
+            alert("Plese Select Answer");
+        }
+    }
+    function QuestionSkip(e) {
+        Skip++;
+        $(`.${e}`).hide();
+        $(`.${e + 1}`).show();
+    }
+
+    function QuestionSubmit(e) {
+        if ($(`input:radio[name='QO${e}']`).is(":checked")) {
+            let done = $(`input:radio[name="QO${e}"]:checked`).attr("AnswerId");
+            $.ajax({
+                method: "Get",
+                url: "/Quiz/GetAnswerList",
+                success: function (res) {
+                    var ansList = JSON.parse(res);
+                    //console.log(ansList);
+                    success = ansList.find(x => x.AnswerId == done && x.IsCorrect == true);
+                    if (success != undefined) {
+                        TotalMark = TotalMark + 10;
+                        Attempt = Attempt + 1;
+                        RightAnswer = RightAnswer + 1;
+                        $(".Result").append(`<div class="Result container container-fluid">
+                                        <div class="row">
+                                            <div class=" col-md-6">
+                                                Total Questions
+                                            </div>
+                                            <div class=" col-md-6">
+                                                ${data.length}
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class=" col-md-6">
+                                                Attempt
+                                            </div>
+                                            <div class=" col-md-6">
+                                                ${Attempt}
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class=" col-md-6">
+                                                Skip
+                                            </div>
+                                            <div class=" col-md-6">
+                                                ${Skip}
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class=" col-md-6">
+                                                Right Answer
+                                            </div>
+                                            <div class=" col-md-6">
+                                                ${RightAnswer}
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class=" col-md-6">
+                                                Wrong Answer
+                                            </div>
+                                            <div class=" col-md-6">
+                                                ${WrongAnswer}
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class=" col-md-6">
+                                                Result
+                                            </div>
+                                            <div class=" col-md-6">
+                                                ${TotalMark > 40 ? "Pass" : "Fail"}
+                                            </div>
+                                        </div>
+                                        </div>`
+                        )
+                    }
+                    else {
+                        TotalMark = TotalMark - 5;
+                        Attempt = Attempt + 1;
+                        WrongAnswer = WrongAnswer + 1;
+                        $(".Result").append(`<div class="Result container container-fluid">
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Total Questions
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${data.length}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Attempt
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${Attempt}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Skip
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${Skip}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Right Answer
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${RightAnswer}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Wrong Answer
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${WrongAnswer}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Result
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${TotalMark > 40 ? "Pass" : "Fail"}
+                                    </div>
+                                </div>
+                                </div>`
+                        );
+                    }
+                }
+            });
+            $(`.${e}`).hide();
+            $(`.${e + 1}`).show();
+        }
+        else {
+            Skip++;
+            $(".Result").append(`<div class="Result container container-fluid">
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Total Questions
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${data.length}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Attempt
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${Attempt}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Skip
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${Skip}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Right Answer
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${RightAnswer}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Wrong Answer
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${WrongAnswer}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        Result
+                                    </div>
+                                    <div class=" col-md-6">
+                                        ${TotalMark > 40 ? "Pass" : "Fail"}
+                                    </div>
+                                </div>
+                                </div>`);
+            $(`.${e}`).hide();
+        }
+    }
+</script>

@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Student";
+}
+
+<div class="container">
+    <div class="row mt-4" style="margin-top:30px">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 " style="border:5px solid black">
+          
+
+            <lable>Name</lable>
+            <input type="text" class="form-control" id="name" />
+            <lable>Mobile</lable>
+            <input type="text" class="form-control" id="mobile" />
+            <lable>Email</lable>
+            <input type="text" class="form-control" id="email" />
+            <br />
+            <button type="button" class="btn btn-danger" id="submitBtn">Save</button>
+            <br />
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+</div>
+
+<div class="container"  style="margin-top:30px">
+    <table class=" table table-responsive" id="MainTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        loadData();
+        $("#submitBtn").click(function () {
+            debugger;
+          
+            var name = $("#name").val();
+            var mobile = $("#mobile").val();
+            var email = $("#email").val();
+
+            $.ajax({
+                method: "POST",
+                url: "/Home/InsertRecord",
+                data:'Name=' + name + '&Mobile=' + mobile + '&Email=' + email,
+                success: function (data) {
+                    if (data) {
+                        debugger;
+                        alert("Student Record Save Successfully");
+                        $("#name").val("");
+                        $("#mobile").val("");
+                        $("#email").val("");
+                    } else {
+                        alert("Error...");
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            })
+
+            
+        })
+    })
+    function loadData() {
+        $.ajax({
+            type: "Get",
+            url: "/Home/GetStudentRecord",
+            dataType: "JSON",
+            success: function (data) {
+                data.forEach(x => {
+                    let row = `<tr>
+                        <td>${x.Name}</td>
+                        <td>${x.Mobile}</td>
+                        <td>${x.Email}</td>
+                        <td><button class="btn btn-primary" onclick="EditUser(${x.Id})">Edit</button>|<button class="btn btn-danger" onclick="DeleteUser(${x.Id})"> Delete</button></td>
+                        </tr>`;
+                    $("#MainTable").append(row);
+                    console.log(row);
+                });
+            },
+            error: function () {
+                alert("error");
+            }
+
+        });
+    }
+    function EditUser(Id) {      
+        $.ajax({
+            async: true,
+            type: "Get",
+            url: "/Home/EditStudentRecord",
+            data: { id: Id },
+            dataType: "json",
+            success: function (res) {
+                $("#Id").val(res.Id);
+                $("#name").val(res.Name);
+                $("#mobile").val(res.Mobile);
+                $("#email").val(res.Email);
+                $("#submitBtn").text("Update");
+            },
+            error: function (res) {
+                alert("error");
+            }
+        })
+    }
+</script>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VATSALQUIZTESTModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="USERDATA">
+    <Key>
+      <PropertyRef Name="USERID" />
+    </Key>
+    <Property Name="USERID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EMAIL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PASSWORD" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="VATSALQUIZTESTEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="USERDATAs" EntityType="Self.USERDATA" />
+    <EntitySet Name="Answers" EntityType="VATSALQUIZTESTModel.Answer" />
+    <EntitySet Name="Questions" EntityType="VATSALQUIZTESTModel.Question" />
+    <AssociationSet Name="FK__Answers__isCorre__286302EC" Association="VATSALQUIZTESTModel.FK__Answers__isCorre__286302EC">
+      <End Role="Question" EntitySet="Questions" />
+      <End Role="Answer" EntitySet="Answers" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Answer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="questionId" Type="Int32" />
+    <Property Name="title" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="isactive" Type="Boolean" />
+    <Property Name="isCorrect" Type="Boolean" />
+    <NavigationProperty Name="Question" Relationship="VATSALQUIZTESTModel.FK__Answers__isCorre__286302EC" FromRole="Answer" ToRole="Question" />
+  </EntityType>
+  <EntityType Name="Question">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="title" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="isactive" Type="Boolean" />
+    <NavigationProperty Name="Answers" Relationship="VATSALQUIZTESTModel.FK__Answers__isCorre__286302EC" FromRole="Question" ToRole="Answer" />
+  </EntityType>
+  <Association Name="FK__Answers__isCorre__286302EC">
+    <End Type="VATSALQUIZTESTModel.Question" Role="Question" Multiplicity="0..1" />
+    <End Type="VATSALQUIZTESTModel.Answer" Role="Answer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Answer">
+        <PropertyRef Name="questionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

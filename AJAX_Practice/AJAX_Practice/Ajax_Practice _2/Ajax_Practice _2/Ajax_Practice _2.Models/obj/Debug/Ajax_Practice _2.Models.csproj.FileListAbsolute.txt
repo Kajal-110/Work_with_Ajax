@@ -1,0 +1,33 @@
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Ajax_Practice _2.Models.dll.config
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Ajax_Practice _2.Models.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Ajax_Practice _2.Models.pdb
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\EntityFramework.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\EntityFramework.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\obj\Debug\Ajax_Practice _2.Models.csproj.AssemblyReference.cache
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\obj\Debug\Ajax_Practice _2.Models.csproj.CoreCompileInputs.cache
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\obj\Debug\Ajax_Practice _2.Models.csproj.CopyComplete
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\obj\Debug\Ajax_Practice _2.Models.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\obj\Debug\Ajax_Practice _2.Models.pdb
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.Helpers.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.Mvc.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.Razor.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.WebPages.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.WebPages.Razor.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Unity.Abstractions.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Unity.Container.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Unity.Mvc5.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.Helpers.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.Mvc.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.Razor.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.WebPages.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.WebPages.Deployment.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\System.Web.WebPages.Razor.xml
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Unity.Abstractions.pdb
+C:\Users\SIT349\source\repos\Ajax_Practice _2\Ajax_Practice _2.Models\bin\Debug\Unity.Container.pdb

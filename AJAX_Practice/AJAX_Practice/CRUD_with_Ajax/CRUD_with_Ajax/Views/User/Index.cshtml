@@ -1,0 +1,225 @@
+﻿@model CRUD_with_Ajax.Model.Models.UserModel
+@using CRUD_with_Ajax.Helpers.GlobalEnum;
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>UserModel</h4>
+        @Html.HiddenFor(Model=>Model.UserId)
+       
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">               
+                @Html.RadioButtonFor(model => model.Gender, "Male")
+                <span>Male</span>
+                @Html.RadioButtonFor(model => model.Gender, "Female")
+                <span>Female</span>
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control",@Type="date" } })
+                @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">             
+                @Html.DropDownListFor(model => model.Role, EnumHelper.GetSelectList(typeof(UserRoleType)), "--Select Role--", new { @class = "input-group-text form-control" })
+                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsDeleted, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsDeleted, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IsDeleted, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Save Details" class="btn btn-default" id="SubmitBtn"/>
+            </div>
+        </div>
+    </div>
+}
+
+<table class="table table-responsive" id="MainTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Gender</th>
+            <th>DOB</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="tablebody" >
+        
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Loaduser();
+
+        $("#SubmitBtn").click(function () {
+            var UserModel = {
+                UserName: $("#UserName").val(),
+                Address: $("#Address").val(),
+                Gender: $("#Gender").val(),
+                DOB: $("#DOB").val(),
+                PhoneNo: $("#PhoneNo").val(),
+                Role: $("#Role").val(),
+            }
+            $.ajax({
+                async: true,
+                type: "Post",
+                url: "/User/AddUser",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(UserModel),
+                success: function (res) {
+                    if (res.Success) {
+                        alert("data added");
+                        $("#tablebody").empty();
+;                        Loaduser();
+                    }
+                    else {
+                        alert("error");
+                    }                    
+                },
+                error: function () {
+                    alert("there is some error");
+                } 
+            });
+        })
+    })
+
+    function EditUser(UserId) {
+        debugger;
+     
+        $.ajax({
+            async: true,
+            type: "Get",
+            url: "/User/EditUser",
+            data: { id: UserId },
+            dataType: "json",
+      
+            success: function (res) {
+                $("#UserName").val(res.UserName);
+                $("#Address").val(res.Address);
+                $("#Gender").val(res.Gender);
+                $("#DOB").val(res.DOB);
+                $("#PhoneNo").val(res.PhoneNo);
+                $("#Role").val(res.Role);
+            },
+            error: function (res) {
+                alert("error");
+            }
+        })
+    }
+
+    function DeleteUser(UserId) {
+        var uid ={ id: UserId };
+        $.ajax({
+            async:true,
+            type: "Post",
+            url: "/User/DeleteUser",
+            data: JSON.stringify(uid),
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                //debugger;
+                if (res.success) {
+                    $("#tablebody").empty();
+                     Loaduser();
+                    //$("#UserId").remove();
+
+                } else {
+                    alert('Failed to delete the item.');
+                }
+            },
+            error: function () {
+                alert('Error occurred while deleting the item.');
+            }
+        });
+    }
+
+    function Loaduser() {        
+        $.ajax({           
+            type: "Get",
+            url: "/User/GetAllUsers",
+            dataType: "json",          
+            success: function (res) {
+
+                console.log(res);
+               
+                res.forEach(x => {
+                   
+                    let row = `
+                        <tr>
+                            <td>${x.UserName}</td>
+                            <td>${x.Address}</td>
+                            <td>${x.Gender}</td>
+                            <td>${x.DOB}</td>
+                            <td>${x.PhoneNo}</td>
+                            <td>${x.Role}</td>
+                            <td><button class="btn btn-primary" onclick="EditUser(${x.UserId})">Edit</button>|<button class="btn btn-danger" onclick="DeleteUser(${x.UserId})"> Delete</button></td>
+                        </tr>
+
+                    `;
+                   
+                    //$("#MainTable").find("tr:gt(36)").remove();
+                    $("#tablebody").append(row);
+                    console.log(row);
+                });
+            },
+            error: function(){
+                alert("there is problem to load data");
+            }
+        })
+    }
+</script>
+
